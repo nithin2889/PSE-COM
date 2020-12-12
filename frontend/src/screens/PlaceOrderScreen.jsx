@@ -1,31 +1,33 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { Link } from "react-router-dom";
 import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
+import { USER_DETAILS_RESET } from "../constants/userConstants";
 
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
 
+  if (!cart.shippingAddress.address) {
+    history.push("/shipping");
+  } else if (!cart.paymentMethod) {
+    history.push("/payment");
+  }
+  //   Calculate prices
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
 
-  // Calculate prices
   cart.itemsPrice = addDecimals(
     cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
-
-  // Calculate shipping
   cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100);
-
-  // Calculate tax
-  cart.taxPrice = addDecimals((0.15 * cart.itemsPrice).toFixed(2));
-
-  // Total price
+  cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
   cart.totalPrice = (
     Number(cart.itemsPrice) +
     Number(cart.shippingPrice) +
@@ -38,8 +40,11 @@ const PlaceOrderScreen = ({ history }) => {
   useEffect(() => {
     if (success) {
       history.push(`/order/${order._id}`);
+      dispatch({ type: USER_DETAILS_RESET });
+      dispatch({ type: ORDER_CREATE_RESET });
     }
-  }, [history, success, order]);
+    // eslint-disable-next-line
+  }, [history, success]);
 
   const placeOrderHandler = () => {
     dispatch(
@@ -64,8 +69,8 @@ const PlaceOrderScreen = ({ history }) => {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Address: </strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
+                <strong>Address:</strong>
+                {cart.shippingAddress.address}, {cart.shippingAddress.city}{" "}
                 {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
               </p>
@@ -100,8 +105,7 @@ const PlaceOrderScreen = ({ history }) => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ${item.price} = $
-                          {addDecimals(item.qty * item.price)}
+                          {item.qty} x ${item.price} = ${item.qty * item.price}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -113,7 +117,7 @@ const PlaceOrderScreen = ({ history }) => {
         </Col>
         <Col md={4}>
           <Card>
-            <ListGroup>
+            <ListGroup variant="flush">
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>

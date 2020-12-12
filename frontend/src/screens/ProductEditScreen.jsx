@@ -16,8 +16,8 @@ const ProductEditScreen = ({ match, history }) => {
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
-  const [countInStock, setCountInStock] = useState(0);
   const [category, setCategory] = useState("");
+  const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
 
@@ -66,10 +66,11 @@ const ProductEditScreen = ({ match, history }) => {
       };
 
       const { data } = await axios.post("/api/upload", formData, config);
+
       setImage(data);
       setUploading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setUploading(false);
     }
   };
@@ -109,7 +110,7 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="name"
-                placeholder="Enter name"
+                placeholder="Enter Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
@@ -119,7 +120,7 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Price</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter price"
+                placeholder="Enter Price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               ></Form.Control>
@@ -129,13 +130,13 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Image</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter image url"
+                placeholder="Enter Image URL"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
               <Form.File
                 id="image-file"
-                label="Choose file"
+                label="Choose File"
                 custom
                 onChange={uploadFileHandler}
               ></Form.File>
@@ -146,7 +147,7 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter brand"
+                placeholder="Enter Brand"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
@@ -156,7 +157,7 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter count in tock"
+                placeholder="Enter Count In Stock"
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
               ></Form.Control>
@@ -166,7 +167,7 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Category</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter category"
+                placeholder="Enter Category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               ></Form.Control>
@@ -176,7 +177,7 @@ const ProductEditScreen = ({ match, history }) => {
               <Form.Label>Description</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter description"
+                placeholder="Enter Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>

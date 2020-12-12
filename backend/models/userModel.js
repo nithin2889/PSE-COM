@@ -32,10 +32,10 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 userSchema.pre("save", async function (next) {
-  // only execute this if the password is modified (updated password)
   if (!this.isModified("password")) {
     next();
   }
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
